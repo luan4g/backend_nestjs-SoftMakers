@@ -6,22 +6,26 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id     String @id
-  name   String
-  email  String @unique
-  imagem String
-  pass   String
+  id         String   @id @default(uuid())
+  name       String
+  email      String   @unique
+  imagem     String
+  pass       String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
 
   posts Post[]
+
+  @@map("users")
 }
 
 model Post {
-  id         String   @id
+  id         String   @id @default(uuid())
   content    String
   likes      Int
   created_at DateTime @default(now())
@@ -29,4 +33,6 @@ model Post {
 
   author User   @relation(fields: [userId], references: [id])
   userId String
+
+  @@map("posts")
 }
